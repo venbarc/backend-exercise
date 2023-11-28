@@ -1,13 +1,14 @@
-import { serialize, deserialize } from '../../src/level-1/serializer';
+import { serialize, deserialize, Value } from './';
 
-describe('Serializer', () => {
+describe('Serialization', () => {
   describe('scalars', () => {
-    const cases = [
+    const cases: [string, Value, unknown][] = [
       ['null', null, null],
       ['string', 'string', 'string'],
       ['number', 1, 1],
       ['boolean', true, true],
-    ] as [string, unknown, unknown][];
+      ['undefined', undefined, undefined],
+    ];
 
     test.each(cases)('serialize %p', (_, input, output) => {
       expect(serialize(input)).toEqual(output);
@@ -19,7 +20,7 @@ describe('Serializer', () => {
   });
 
   describe('built-in object types', () => {
-    const cases = [
+    const cases: [string, Value, unknown][] = [
       [
         'Map',
         new Map([
@@ -52,7 +53,7 @@ describe('Serializer', () => {
         new Date('2022-12-25T04:27:49.988Z'),
         { __t: 'Date', __v: 1671942469988 },
       ],
-    ] as [string, unknown, unknown][];
+    ];
 
     test.each(cases)('serialize %p', (_, input, output) => {
       expect(serialize(input)).toEqual(output);
@@ -64,13 +65,14 @@ describe('Serializer', () => {
   });
 
   describe('nested objects', () => {
-    const cases = [
+    const cases: [Value, unknown][] = [
       [
         {
           null: null,
           string: 'string',
           number: 1,
           boolean: true,
+          undefined: undefined,
           Date: new Date('2022-12-25T04:27:49.988Z'),
           Buffer: Buffer.from([90, 115, 109, 187, 242, 216, 94, 110]),
           Set: new Set(['one', 'two', 'three']),
@@ -83,6 +85,7 @@ describe('Serializer', () => {
             string: 'string',
             number: 1,
             boolean: true,
+            undefined: undefined,
             Date: new Date('2022-12-25T04:27:49.988Z'),
             Buffer: Buffer.from([90, 115, 109, 187, 242, 216, 94, 110]),
             Set: new Set(['one', 'two', 'three']),
@@ -96,6 +99,7 @@ describe('Serializer', () => {
             'string',
             1,
             true,
+            undefined,
             new Date('2022-12-25T04:27:49.988Z'),
             Buffer.from([90, 115, 109, 187, 242, 216, 94, 110]),
             new Set(['one', 'two', 'three']),
@@ -108,6 +112,7 @@ describe('Serializer', () => {
               string: 'string',
               number: 1,
               boolean: true,
+              undefined: undefined,
             },
           ],
         },
@@ -116,6 +121,7 @@ describe('Serializer', () => {
           string: 'string',
           number: 1,
           boolean: true,
+          undefined: undefined,
           Date: { __t: 'Date', __v: 1671942469988 },
           Buffer: {
             __t: 'Buffer',
@@ -134,6 +140,7 @@ describe('Serializer', () => {
             string: 'string',
             number: 1,
             boolean: true,
+            undefined: undefined,
             Date: { __t: 'Date', __v: 1671942469988 },
             Buffer: {
               __t: 'Buffer',
@@ -153,6 +160,7 @@ describe('Serializer', () => {
             'string',
             1,
             true,
+            undefined,
             { __t: 'Date', __v: 1671942469988 },
             {
               __t: 'Buffer',
@@ -171,11 +179,12 @@ describe('Serializer', () => {
               string: 'string',
               number: 1,
               boolean: true,
+              undefined: undefined,
             },
           ],
         },
       ],
-    ] as [unknown, unknown][];
+    ];
 
     test.each(cases)('serialize nested object', (input, output) => {
       expect(serialize(input)).toEqual(output);
