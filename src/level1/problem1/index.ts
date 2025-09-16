@@ -52,7 +52,7 @@ export function serialize(value: Value): unknown {
     return obj;
   }
 
-  // Fallback case
+  // Fallback
   return value;
 
 }
@@ -102,8 +102,6 @@ export function deserialize<T = unknown>(value: unknown): T {
     return result as T;
   }
 
-  // Fallback for any unexpected cases.
+  // Fallback
   return value as T;
-  
-  return;
 }
